@@ -2,11 +2,12 @@
 # https://github.com/riggraz/no-style-please#customize-the-menu
 
 entries:
-  - title: CV (updated Dec 2024)
-    url: https://drive.google.com/file/d/1G0DBJxDMnEYknpY7LJmIE1PBI6PKNOgj/view?usp=sharing
-
-  - title: Blog
-    url: how-to.html
+  - title: all posts
+    post_list:
+      limit: 5
+      show_more: true
+      show_more_text: See archive...
+      show_more_url: archive.html
 
       # limit: 0
       # show_more: true
@@ -25,17 +26,12 @@ entries:
   #     show_more: true
   #     show_more_text: See more posts...
   #     show_more_url: example2-archive.html
-
-  # - title: rss
-  #   url: feed.xml
   
-  # - title: another list
-  #   entries:
-  #     - title: with subitems
-  #       entries:
-  #         - title: with subsubitems
-  #         - title: example page
-  #           url: about
+  - title: my socials
+    entries:
+      - title: github.com/jieqiboh
+      - title: linkedin.com/in/jieqiboh
+      - title: jieqiboh5836 at gmail dot com
   # - title: PRO TIP
   #   entries:
   #     - title: to edit this menu, edit _data/menu.yml file

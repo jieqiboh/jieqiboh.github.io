@@ -1,9 +1,9 @@
-title: Lin Gan 🐯 # name of the site
+title: JieQi Boh 🐢 # name of the site
 author: # name of site's author
 email: # email of site's author
-url: https://lin-v-gan.github.io # root address of the site
+url: https://jieqiboh.me # root address of the site
 baseurl: "" # subpath of the site, e.g. "/blog" (leave it blank "" if you're site shouldn't use a subpath)
-description: > # description of the site (multiple lines allowed)
+description: Hello! I'm a Computer Science student at the National University of Singapore! # description of the site (multiple lines allowed)
 
 permalink: /:slug.html
 
@@ -13,11 +13,11 @@ favicon: # name+extension of favicon (which must be put on the root folder)
 remote_theme: riggraz/no-style-please # if you are using GitHub Pages, change it to remote_theme: riggraz/no-style-please
 
 theme_config:
-  appearance: "auto" # can be "light", "dark" or "auto"
+  appearance: "dark" # can be "light", "dark" or "auto"
   back_home_text: ".." # customize text for homepage link in post layout
   date_format: "%Y-%m-%d" # customize how date is formatted
-  show_description: false # show blog description in home page
-  lowercase_titles: false # show titles in lowercase in lists
+  show_description: true # show blog description in home page
+  lowercase_titles: true # show titles in lowercase in lists
 
 sass:
   style: compressed
