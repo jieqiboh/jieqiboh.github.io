@@ -5,7 +5,7 @@ theme = 'hugo-bearblog'
 
 [markup]
   [markup.highlight]
-    style = "dracula"   # Or any Chroma-supported theme
+    style = "catppuccin-latte"   # Or any Chroma-supported theme
     noClasses = true
 
 [caches]
