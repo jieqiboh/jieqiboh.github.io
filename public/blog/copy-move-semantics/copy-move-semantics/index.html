@@ -11,7 +11,7 @@
 <meta name="keywords" content="" />
 
 
-<meta property="og:url" content="http://localhost:1313/blog/copy-move-semantics/">
+<meta property="og:url" content="http://localhost:1313/blog/copy-move-semantics/copy-move-semantics/">
   <meta property="og:site_name" content="jieqi&#39;s archive">
   <meta property="og:title" content="The Semantics of Move and Copy">
   <meta property="og:description" content="-">
@@ -35,7 +35,7 @@
   <meta itemprop="description" content="-">
   <meta itemprop="datePublished" content="2025-05-05T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-05-05T00:00:00+00:00">
-  <meta itemprop="wordCount" content="334">
+  <meta itemprop="wordCount" content="435">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -212,34 +212,54 @@
   <p>I recently completed my parallel programming module, and while it wasn&rsquo;t a particularly pleasant experience, I think I got the gist of ownership, as well as the concepts surrounding move and copy, which are important to internalise. This is a distillation of what I&rsquo;ve learned for future me&rsquo;s reference.</p>
 <h2 id="ownership">Ownership</h2>
 <p>Unless you&rsquo;ve touched lower level languages such as C++ (and particularly Rust), ownership would not be something that you would necessarily know.
-Broadly speaking, ownership is about who controls a certain value stored on the stack or heap.<br>
+Broadly speaking, ownership is about who controls a certain value stored on the stack or heap.
 In C++, an owner is an <a href="https://en.cppreference.com/w/cpp/language/object">object</a> containing a pointer to an object allocated by new. (for which a delete is required)
-An important part of ownership is determining when and who should delete an object.</p>
-<p>Say we write the following in C++:</p>
-<div class="highlight"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std<span style="color:#04a5e5;font-weight:bold">::</span>string s1 <span style="color:#04a5e5;font-weight:bold">=</span> <span style="color:#40a02b">&#34;hello&#34;</span>;
-</span></span></code></pre></div><figure><img src="/blog/copy-move-semantics/images/1.png" width="300">
-</figure>
-
-<p>As can be seen, s1 is stored on the stack, and contains a pointer to the string &ldquo;hello&rdquo; stored on the heap, and thus is considered its owner. As std::string follows <a href="https://en.cppreference.com/w/cpp/language/raii">RAII</a>, once s1 goes out of scope, its heap allocated &ldquo;hello&rdquo; gets deleted as well.</p>
+An important part of ownership is determining when and who should delete an object.
+Simple concept explanation, enforcement of ownership rules in Rust and C++ (or lack thereof) and accompanying diagrams</p>
+<p><img src="/static/images/copy-move-semantics/1.png" alt="picture"></p>
+<h2 id="shallow-and-deep-copies">Shallow and Deep Copies</h2>
+<p>Explanation of shallow and deep copies (language agnostic)</p>
 <h3 id="move-c-stdmove-as-compared-to-rust">Move (C++ std::move as compared to Rust)</h3>
-<p>Now, say we want to copy the contents of s1 to s2, and don&rsquo;t need s1 to contain the value &ldquo;hello&rdquo; anymore.
-We could naively do the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std<span style="color:#04a5e5;font-weight:bold">::</span>string s1 <span style="color:#04a5e5;font-weight:bold">=</span> <span style="color:#40a02b">&#34;hello&#34;</span>;
-</span></span><span style="display:flex;"><span>std<span style="color:#04a5e5;font-weight:bold">::</span>string s2 <span style="color:#04a5e5;font-weight:bold">=</span> s1;
-</span></span></code></pre></div><p><figure><img src="/blog/copy-move-semantics/images/2.png" width="300">
-</figure>
-
-C++ actually performs a deep copy, allocating more space on the heap and copying the contents of s1 over!
-(Note that whether a deep or shallow copy is performed depends on the type and how its copy assignment operator is implemented. For strings a deep copy is done.)</p>
-<p>Instead, what we hope to achieve is a <em>transferral of ownership</em>, where s2 points to the original dynamically allocated string on the heap, and s1 loses its pointer to it.</p>
-<figure><img src="/blog/copy-move-semantics/images/3.png" width="300">
-</figure>
-
-<div class="highlight"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>std<span style="color:#04a5e5;font-weight:bold">::</span>string s1 <span style="color:#04a5e5;font-weight:bold">=</span> <span style="color:#40a02b">&#34;hello&#34;</span>;
-</span></span><span style="display:flex;"><span>std<span style="color:#04a5e5;font-weight:bold">::</span>string s2 <span style="color:#04a5e5;font-weight:bold">=</span> std<span style="color:#04a5e5;font-weight:bold">::</span>move(s1);
-</span></span></code></pre></div><p><a href="https://en.cppreference.com/w/cpp/utility/move"><code>std::move</code></a> helps to achieve this behaviour.</p>
-<h4 id="more-value-categories">More: Value Categories</h4>
-<p>For those wondering how <code>std::move</code> works, we first need to understand <a href="https://en.cppreference.com/w/cpp/language/value_category">value categories</a> in C++.</p>
+<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
+<h4 id="conclusion">Conclusion</h4>
+<p>Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.</p>
+<h2 id="typography">Typography</h2>
+<p>Lid est laborum et dolorum fuga, This is <a href="http://example.com/" title="Title">an example</a> inline link. Et harum quidem rerum facilis, <strong>This is bold</strong> and <em>emphasis</em> cumque nihilse impedit quo minus id quod amets untra dolor amet sad. While this is <code>code block()</code> and following is a <code>pre</code> tag</p>
+<pre><code>print 'this is pre tag'
+</code></pre>
+<p>Following is the syntax highlighted code block</p>
+<div class="highlight"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#d20f39">func</span> <span style="color:#1e66f5">getCookie</span>(name <span style="color:#d20f39">string</span>, r <span style="color:#d20f39">interface</span>{}) (<span style="color:#04a5e5;font-weight:bold">*</span>http.Cookie, <span style="color:#d20f39">error</span>) {
+</span></span><span style="display:flex;"><span>	rd <span style="color:#04a5e5;font-weight:bold">:=</span> r.(<span style="color:#04a5e5;font-weight:bold">*</span>http.Request)
+</span></span><span style="display:flex;"><span>	cookie, err <span style="color:#04a5e5;font-weight:bold">:=</span> rd.<span style="color:#1e66f5">Cookie</span>(name)
+</span></span><span style="display:flex;"><span>	<span style="color:#8839ef">if</span> err <span style="color:#04a5e5;font-weight:bold">!=</span> <span style="color:#fe640b">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#8839ef">return</span> <span style="color:#fe640b">nil</span>, err
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#8839ef">return</span> cookie, <span style="color:#fe640b">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#d20f39">func</span> <span style="color:#1e66f5">setCookie</span>(cookie <span style="color:#04a5e5;font-weight:bold">*</span>http.Cookie, w <span style="color:#d20f39">interface</span>{}) <span style="color:#d20f39">error</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#9ca0b0;font-style:italic">// Get write interface registered using `Acquire` method in handlers.</span>
+</span></span><span style="display:flex;"><span>	wr <span style="color:#04a5e5;font-weight:bold">:=</span> w.(http.ResponseWriter)
+</span></span><span style="display:flex;"><span>	http.<span style="color:#1e66f5">SetCookie</span>(wr, cookie)
+</span></span><span style="display:flex;"><span>	<span style="color:#8839ef">return</span> <span style="color:#fe640b">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>This is blockquote, Will make it <em>better now</em></p>
+<blockquote>
+<p>&lsquo;I want to do with you what spring does with the cherry trees.&rsquo; <!-- raw HTML omitted -->cited ~Pablo Neruda<!-- raw HTML omitted -->*</p></blockquote>
+<blockquote>
+<p>Et harum quidem <em>rerum facilis</em> est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit</p></blockquote>
+<p>Unordered list</p>
+<ul>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li>
+</ul>
+<p>Ordered list</p>
+<ol>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li>
+</ol>
 
 </content>
 <p>
