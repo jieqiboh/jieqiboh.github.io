@@ -85,6 +85,10 @@
       background-color: var(--code-background-color);
       color: var(--code-color);
       border-radius: 3px;
+      text-size-adjust: 100%;         /* Fix weird ios code font size bug*/
+      -ms-text-size-adjust: 100%;     /* Fix weird ios code font size bug*/
+      -moz-text-size-adjust: 100%;    /* Fix weird ios code font size bug*/
+      -webkit-text-size-adjust: 100%; /* Fix weird ios code font size bug*/
   }
 
   blockquote {

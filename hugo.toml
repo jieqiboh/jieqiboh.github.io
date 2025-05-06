@@ -3,6 +3,11 @@ languageCode = 'en-us'
 title = "jieqi's archive"
 theme = 'hugo-bearblog'
 
+[markup]
+  [markup.highlight]
+    style = "dracula"   # Or any Chroma-supported theme
+    noClasses = true
+
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
