@@ -3,10 +3,6 @@ languageCode = 'en-us'
 title = "jieqi's archive"
 theme = 'hugo-bearblog'
 
-[markup]
-  [markup.highlight]
-    style = 'doom-one'
-
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
