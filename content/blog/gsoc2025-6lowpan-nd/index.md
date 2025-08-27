@@ -63,7 +63,10 @@ For future extensions, we can aim for full support for the Bridging Proxy featur
 The current implementation of 6LoWPAN-ND manually injects static routes upon successfully registering addresses, using the IpV6StaticRouting. This is due to the fact that ns-3 currently lacks an implementation for the  Routing Protocol for Low-Powered and Lossy Networks (RFC6550). Should RPL be eventually introduced into ns-3, the existing code will have to be refactored to use the RPL instead.
 
 - **Nodes are not assumed to be mobile:**
-LLNs (Low-powered, Lossy Networks) that employ 6LoWPAN and 6LoWPAN-ND, typically comprise small IoT devices that may sleep intermittently and move around. As such, future extensions could account for more real-world paths, such as changes in the 6LoWPAN-ND registration registrar for a node, STALE bindings, etc.  
+LLNs (Low-powered, Lossy Networks) that employ 6LoWPAN and 6LoWPAN-ND, typically comprise small IoT devices that may sleep intermittently and move around. As such, future extensions could account for more real-world paths, such as changes in the 6LoWPAN-ND registration registrar for a node, STALE bindings, etc.  Going forward, we can introduce test cases where simple mobility models are used, to mimic the mobility of nodes as they exit an LLN, and move into the range of another. 
 
-Going forward, we can introduce test cases where simple mobility models are used, to mimic the mobility of nodes as they exit an LLN, and move into the range of another. 
-
+## Acknowledgements ##
+This project was funded by Google Summer of Code (GSOC 2025).   
+I am deeply grateful to my mentors, and the ns-3 community for their support and help!  
+This has been an invaluable experience, and it was really cool getting to talk to and learn from industry experts in the domain of computer networks.   
+Many thanks to Prof Tommaso and Prof Adnan for their unwavering support, and willingness to entertain my odd questions :p
