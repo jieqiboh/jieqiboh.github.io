@@ -26,7 +26,7 @@ In the aforementioned topology, the 6LNs should be able to undergo the address r
 - **Bugfixes:** Refactored the existing address registration logic, identifying an assumption regarding concurrent address registrations which caused them to fail.  
 - **Testing Suite:** Wrote unit tests validating the behaviour of helper methods, as well as address registration bootstrapping of up to 20 6LNs with a single 6LBR.
 - **Examples:** Wrote a basic test to demonstrate how users could set up a simple mesh-under topology with 6LNs and 6LBRs.  
-- **Documentation:** Updated the existing Sphinx documentation in `src/sixlowpan/doc/sixlowpan.rst`, created a report documenting changes and design decisions [here.]()  
+- **Documentation:** Updated the existing Sphinx documentation in `src/sixlowpan/doc/sixlowpan.rst`, created a report documenting changes and design decisions [here.](https://docs.google.com/document/d/1kKYQzeEv3RgmSG0VDjr60ZC90ISxWAGZbwwOFPHf3nE/edit?usp=sharing)  
 
 ### Phase 2: ###
 In phase 2, the end-goal was to achieve a functioning route-under topology comprising n 6LNs, m 6BBRs and a single 6LBR. The topology more closely mirrors real-world deployments, where a network comprises multiple subnets.  
@@ -50,6 +50,20 @@ In the aforementioned topology, the 6LNs should be able to undergo the address r
 - [Phase 2 Merge Request](): Status Ready, currently under review  
 
 ## Future Extensions ##
+- **Full 6BBR Implementation:**
+In the current implementation, the Bridging Proxy features of the 6BBR defined in RFC 8929 were not included, as they were outside the primary scope of adding EDAR/EDAC multihop DAD support to sixlowpan-nd. RFC 8929 also notes that a separate 6LBR is not strictly necessary, since the 6BBR itself can perform conventional IPv6 Duplicate Address Detection (DAD) on the backbone when registering a global address for an LLN node. For simplicity, our implementation assumes that the backbone link does not include legacy IPv6 devices, and therefore the 6BBR bypasses sending Neighbor Solicitations for DAD on the backbone.
+
+For future extensions, we can aim for full support for the Bridging Proxy features of the 6BBR as described in RFC 8929, including backbone proxying of ND messages and optional conventional IPv6 DAD on the backbone link, by introducing simulations that include IPv6 legacy devices on the backbone link not utilising 6LoWPAN-ND.
+
+- **6LBR Application Implementation:**
+
 
 ## Limitations of Current Implementation ##
+- **Lack of RPL:**
+The current implementation of 6LoWPAN-ND manually injects static routes upon successfully registering addresses, using the IpV6StaticRouting. This is due to the fact that ns-3 currently lacks an implementation for the  Routing Protocol for Low-Powered and Lossy Networks (RFC6550). Should RPL be eventually introduced into ns-3, the existing code will have to be refactored to use the RPL instead.
+
+- **Nodes are not assumed to be mobile:**
+LLNs (Low-powered, Lossy Networks) that employ 6LoWPAN and 6LoWPAN-ND, typically comprise small IoT devices that may sleep intermittently and move around. As such, future extensions could account for more real-world paths, such as changes in the 6LoWPAN-ND registration registrar for a node, STALE bindings, etc.  
+
+Going forward, we can introduce test cases where simple mobility models are used, to mimic the mobility of nodes as they exit an LLN, and move into the range of another. 
 
