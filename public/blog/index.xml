@@ -29,5 +29,12 @@
       <guid>http://localhost:1313/blog/copy-move-semantics/</guid>
       <description>&lt;p&gt;I recently completed my parallel programming module, and while it wasn&amp;rsquo;t a particularly pleasant experience, I think I got the gist of ownership, as well as the concepts surrounding move and copy, which are important to internalise. This is a distillation of what I&amp;rsquo;ve learned for future me&amp;rsquo;s reference.&lt;/p&gt;&#xA;&lt;h2 id=&#34;ownership&#34;&gt;Ownership&lt;/h2&gt;&#xA;&lt;p&gt;Unless you&amp;rsquo;ve touched lower level languages such as C++ (and particularly Rust), ownership would not be something that you would necessarily know.&#xA;Broadly speaking, ownership is about who controls a certain value stored on the stack or heap.&lt;br&gt;&#xA;In C++, an owner is an &lt;a href=&#34;https://en.cppreference.com/w/cpp/language/object&#34;&gt;object&lt;/a&gt; containing a pointer to an object allocated by new. (for which a delete is required)&#xA;An important part of ownership is determining when and who should delete an object.&lt;/p&gt;</description>
     </item>
+    <item>
+      <title>jan 2025: photo dump</title>
+      <link>http://localhost:1313/blog/jan-2025-photo-dump/</link>
+      <pubDate>Mon, 03 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/jan-2025-photo-dump/</guid>
+      <description>&lt;p&gt;taken with a sony a73&lt;/p&gt;&#xA;&lt;p&gt;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/jan-2025-photo-dump/images/1.jpg&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/jan-2025-photo-dump/images/2.jpg&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/jan-2025-photo-dump/images/3.jpg&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/jan-2025-photo-dump/images/4.jpg&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/jan-2025-photo-dump/images/5.jpg&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&#xA;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/jan-2025-photo-dump/images/6.jpg&#34; width=&#34;500&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&lt;/p&gt;</description>
+    </item>
   </channel>
 </rss>
