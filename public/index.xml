@@ -6,8 +6,15 @@
     <description>Recent content on jieqi&#39;s archive</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 27 Aug 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 14 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>automating stuff with ansible</title>
+      <link>http://localhost:1313/blog/playing-around-with-ansible/</link>
+      <pubDate>Sun, 14 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/playing-around-with-ansible/</guid>
+      <description>&lt;p&gt;&lt;strong&gt;Problem:&lt;/strong&gt; I often want to quickly set up my development environment on new machines, be it on freshly spun-up docker containers, or on newly-built PC running Ubuntu.&lt;/p&gt;&#xA;&lt;p&gt;Some things I always want installed include: Python, C++, Git, neovim.&#xA;Shell scripting is often tedious and error prone, so I decided to try out Ansible.&#xA;While Ansible is often used for managing fleets of remote servers, I’m using it here to automate local setup and to configure running Docker containers the same way.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>GSOC2025: 6LoWPAN Optimised Neighbour Discovery</title>
       <link>http://localhost:1313/blog/gsoc2025-6lowpan-nd/</link>
@@ -21,13 +28,6 @@
       <pubDate>Mon, 05 May 2025 00:00:00 +0000</pubDate>
       <guid>http://localhost:1313/blog/copy-move-semantics/</guid>
       <description>&lt;p&gt;I recently completed my parallel programming module, and while it wasn&amp;rsquo;t a particularly pleasant experience, I think I got the gist of ownership, as well as the concepts surrounding move and copy, which are important to internalise. This is a distillation of what I&amp;rsquo;ve learned for future me&amp;rsquo;s reference.&lt;/p&gt;&#xA;&lt;h2 id=&#34;ownership&#34;&gt;Ownership&lt;/h2&gt;&#xA;&lt;p&gt;Unless you&amp;rsquo;ve touched lower level languages such as C++ (and particularly Rust), ownership would not be something that you would necessarily know.&#xA;Broadly speaking, ownership is about who controls a certain value stored on the stack or heap.&lt;br&gt;&#xA;In C++, an owner is an &lt;a href=&#34;https://en.cppreference.com/w/cpp/language/object&#34;&gt;object&lt;/a&gt; containing a pointer to an object allocated by new. (for which a delete is required)&#xA;An important part of ownership is determining when and who should delete an object.&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Template Post</title>
-      <link>http://localhost:1313/blog/stuff/</link>
-      <pubDate>Thu, 05 May 1025 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/stuff/</guid>
-      <description>&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;&#xA;&lt;h1 id=&#34;heading-1&#34;&gt;Heading 1&lt;/h1&gt;&#xA;&lt;p&gt;Lid est laborum et dolorum fuga. Et harum quidem rerum facilis est et expeditasi distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihilse impedit quo minus id quod amets untra dolor amet sad. Sed ut perspser iciatis unde omnis iste natus error sit voluptatem accusantium doloremque laste. Dolores sadips ipsums sits.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
