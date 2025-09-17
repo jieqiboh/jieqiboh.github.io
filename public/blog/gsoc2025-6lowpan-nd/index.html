@@ -35,7 +35,7 @@
   <meta itemprop="description" content="-">
   <meta itemprop="datePublished" content="2025-08-27T00:00:00+00:00">
   <meta itemprop="dateModified" content="2025-08-27T00:00:00+00:00">
-  <meta itemprop="wordCount" content="1143">
+  <meta itemprop="wordCount" content="1245">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -213,7 +213,16 @@
 <p><strong>Student:</strong> <strong>Boh Jie Qi</strong> (National University of Singapore)<br>
 <strong>Mentors:</strong> <strong>Tommaso Pecorella</strong> and <strong>Adnan Rashid</strong> (Università di Firenze)<br>
 <strong>Organisation:</strong> <a href="https://www.nsnam.org/">The ns-3 Network Simulator Project</a></p>
-<p>Conventional LoWPANs (Low-Power Wireless Personal Area Networks) employ <a href="https://en.wikipedia.org/wiki/IEEE_802.15.4">IEEE 802.15.4</a> links, which have characteristics such as low-power consumption, small frame sizes and limited connectivity. In order to enable the transport of IPv6 packets, the 6LoWPAN protocol is employed, which provides features such as packet fragmentation and reassembly, as well as header-compression.</p>
+<h2 id="overview-of-lowpans-and-6lowpan">Overview of LoWPANs, and 6LoWPAN</h2>
+<p>Conventional LoWPANs (Low-Power Wireless Personal Area Networks) employ <a href="https://en.wikipedia.org/wiki/IEEE_802.15.4">IEEE 802.15.4</a> links, which have characteristics such as low-power consumption, small frame sizes and limited connectivity.<br>
+Some examples include a smart home sensor network, where there are temperature, humidity, and motion sensors all running on tiny batteries and communicating wirelessly.</p>
+<figure><img src="/blog/gsoc2025-6lowpan-nd/images/lowpan.png" width="400">
+</figure>
+
+<p>In these types of networks, we can expect small packet sizes, low power consumption (typically in the milliwatt range), and low transfer rates (~250 kbit/s).</p>
+<p>An issue arises when we want these devices to work with IPv6 and participate in the Internet of Things:  The IPv6 minimum packet size of 1280 octets, far exceeds the maximum frame size defined in 802.15.4 of 127 bytes! (RFC8200)</p>
+<p>In order to enable the transport of IPv6 packets, the 6LoWPAN protocol is employed. It behaves as a shim layer, providing features such as packet fragmentation and reassembly, as well as header-compression.</p>
+<h2 id="what-is-6lowpan-nd">What is 6LoWPAN-ND?</h2>
 <p><strong>6LoWPAN Optimised Neighbour Discovery</strong> (RFCs <a href="https://datatracker.ietf.org/doc/html/rfc4944">4944</a>, <a href="https://datatracker.ietf.org/doc/html/rfc6775">6775</a>, <a href="https://datatracker.ietf.org/doc/html/rfc8505">8505</a> and <a href="https://datatracker.ietf.org/doc/html/rfc8929">8929</a>) is an L4 optimisation that aims to replace the conventional IPv6 Neighbor Discovery Protocol, which is a core part of IPv6 networks, solving the problem of power-intensive multicast transmissions incurred as part of the IPv6 Neighbour Discovery Protocol and Duplicate Address Detection (DAD), outlined in <a href="https://datatracker.ietf.org/doc/html/rfc4861">RFC4861</a>.</p>
 <p>There is a model for 6LoWPAN-ND found in <code>/src/sixlowpan</code>, but it is still not merged in the main ns-3 branch. My goal was to help clean up the existing implementation, as well as add support for a new feature.</p>
 <p>Implementation is split into 2 phases:</p>
