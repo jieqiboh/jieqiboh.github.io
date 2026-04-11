@@ -6,8 +6,15 @@
     <description>Recent content on jieqi&#39;s archive</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 30 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Cache Refresher</title>
+      <link>http://localhost:1313/blog/a-cache-refresher/</link>
+      <pubDate>Mon, 30 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/a-cache-refresher/</guid>
+      <description>&lt;p&gt;A dive into CPU caches for those who superficially understand spatial/temporal locality.&lt;/p&gt;&#xA;&lt;h3 id=&#34;direct-mapped-caches&#34;&gt;Direct Mapped Caches&lt;/h3&gt;&#xA;&lt;p&gt;Recall that a cache line size is the size of a unit of transfer between the DRAM and cache.&lt;/p&gt;&#xA;&lt;p&gt;Core idea: every word in memory can be mapped onto a single cache line.&lt;br&gt;&#xA;How: Given the setup (8 cache lines, 4-byte cache line size, 1-byte word, 32-bit address)&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Offset&lt;/strong&gt;: log₂(4) = &lt;strong&gt;2 bits&lt;/strong&gt; — selects byte within a cache line&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Index&lt;/strong&gt;: log₂(8) = &lt;strong&gt;3 bits&lt;/strong&gt; — selects which cache line&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Tag&lt;/strong&gt;: 32 − 3 − 2 = &lt;strong&gt;27 bits&lt;/strong&gt; — identifies which memory block is cached&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;Example: Fetching 0x0E8 from Physical Memory&lt;/strong&gt;&#xA;&lt;figure&gt;&lt;img src=&#34;http://localhost:1313/blog/a-cache-refresher/images/dm-cache.png&#34;&gt;&#xA;&lt;/figure&gt;&#xA;&lt;/p&gt;</description>
+    </item>
     <item>
       <title>An Intro to DRAM</title>
       <link>http://localhost:1313/blog/intro-to-dram/</link>
