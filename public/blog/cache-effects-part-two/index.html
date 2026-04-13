@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Measurements of Cache Effects: Part 2 | jieqi&#39;s archive</title>
+<meta name="title" content="Measurements of Cache Effects: Part 2" />
+<meta name="description" content="-" />
+<meta name="keywords" content="" />
+
+
+<meta property="og:url" content="http://localhost:1313/blog/cache-effects-part-two/">
+  <meta property="og:site_name" content="jieqi&#39;s archive">
+  <meta property="og:title" content="Measurements of Cache Effects: Part 2">
+  <meta property="og:description" content="-">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2026-04-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-11T00:00:00+00:00">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Measurements of Cache Effects: Part 2">
+  <meta name="twitter:description" content="-">
+
+
+
+
+  <meta itemprop="name" content="Measurements of Cache Effects: Part 2">
+  <meta itemprop="description" content="-">
+  <meta itemprop="datePublished" content="2026-04-11T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-04-11T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1644">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+      --width: 720px;
+      --font-main: system-ui, sans-serif;
+      --font-secondary: system-ui, sans-serif;
+      --font-scale: 0.95em;
+       
+      --heading-color: #222; 
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color:  #FC5185;
+      --code-background-color: #eff1f5;
+       
+      --blockquote-color: #222;
+  }
+
+  body {
+      font-family: var(--font-secondary);
+      font-size: var(--font-scale);
+      margin: auto;
+      padding: 20px;
+      max-width: var(--width);
+      text-align: left;
+      background-color: var(--background-color);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.5;
+      color: var(--text-color);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-main);
+      color: var(--heading-color);
+  }
+
+  a {
+      color: var(--link-color);
+      cursor: pointer;
+      text-decoration: none;
+  }
+
+  a:hover {
+      text-decoration: underline;
+  }
+
+  nav a {
+      margin-right: 8px;
+  }
+
+  strong, b {
+      color: var(--heading-color);
+  }
+
+  button {
+      margin: 0;
+      cursor: pointer;
+  }
+
+  time {
+   	font-family: monospace;
+    	font-style: normal;
+    	font-size: 15px;
+  }
+
+  main {
+      line-height: 1.6;
+  }
+
+  table {
+      width: 100%;
+  }
+
+  hr {
+      border: 0;
+      border-top: 1px dashed;
+  }
+
+  img {
+      max-width: 100%;
+  }
+
+  code {
+      font-family: monospace;
+      padding: 2px;
+      background-color: var(--code-background-color);
+      color: var(--code-color);
+      border-radius: 3px;
+      text-size-adjust: 100%;          
+      -ms-text-size-adjust: 100%;      
+      -moz-text-size-adjust: 100%;     
+      -webkit-text-size-adjust: 100%;  
+  }
+
+  blockquote {
+      border-left: 1px solid #999;
+      color: var(--code-color);
+      padding-left: 20px;
+      font-style: italic;
+  }
+
+  footer {
+      padding: 25px 0;
+      text-align: center;
+  }
+
+  .title:hover {
+      text-decoration: none;
+  }
+
+  .title h1 {
+      font-size: 1.5em;
+  }
+
+  .inline {
+      width: auto !important;
+  }
+
+  .highlight, .code {
+      padding: 1px 15px;
+      background-color: var(--code-background-color);
+      color: var(--code-color);
+      border-radius: 3px;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+      list-style-type: none;
+      padding: unset;
+  }
+
+  ul.blog-posts li {
+      display: flex;
+  }
+
+  ul.blog-posts li span {
+      flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+      color: var(--visited-color);
+  }
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>jieqi&#39;s archive</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Measurements of Cache Effects: Part 2</h1>
+<p>
+  <i>
+    <time datetime='2026-04-11'>
+      11 Apr, 2026
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>This is a continuation from part 1, which condenses information from Ulrich Drepper&rsquo;s paper - &ldquo;What Every Programmer Should Know About Memory&rdquo;. We cover Chapter 3 on CPUs.</p>
+<h2 id="cache-write-behaviour">Cache Write Behaviour</h2>
+<p>No instruction modifies an entire cache line at once, so a write always starts with a load — the cache line must be fetched before any byte in it can be changed. A modified line that hasn&rsquo;t been written back to main memory is called <strong>dirty</strong>.</p>
+<p>When a new line needs to be loaded into a full cache, something must be evicted. Eviction cascades down the hierarchy: L1d → L2 → L3 → main memory, with each level progressively more expensive.</p>
+<p><strong>Inclusive vs exclusive caches</strong> handle this differently:</p>
+<ul>
+<li><strong>Inclusive</strong> (Intel): every line in L1d is also present in L2. Evicting from L1d is cheap since the data is already in L2, but memory is duplicated across levels.</li>
+<li><strong>Exclusive</strong> (AMD, VIA): a line exists in exactly one level. Loading into L1d only touches L1d, but eviction must push the line down to L2 explicitly.</li>
+</ul>
+<h2 id="the-test">The Test</h2>
+<p>We want to measure how access pattern (sequential vs random) and working set size interact with the cache hierarchy.</p>
+<blockquote>
+<p><strong>Note:</strong> Drepper&rsquo;s measurements were taken on a Pentium 4 (64-bit mode) and Intel Core 2 — both <strong>inclusive</strong> cache designs. Results on other hardware (e.g. AMD with exclusive caches, or Apple Silicon with NINE caches) will differ.</p></blockquote>
+<p><strong>Sequential:</strong> each element&rsquo;s n points to the next element in memory order, so pointer chasing happens to walk linearly through the array<br>
+<strong>Random:</strong> the n pointers are shuffled, so each dereference jumps to an unpredictable location</p>
+<figure><img src="/blog/cache-effects-part-two/images/seq-rand.png" width="300">
+</figure>
+
+<div class="highlight"><pre tabindex="0" style="color:#4c4f69;background-color:#eff1f5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#8839ef">struct</span> l {
+</span></span><span style="display:flex;"><span>    <span style="color:#8839ef">struct</span> l <span style="color:#04a5e5;font-weight:bold">*</span>n;
+</span></span><span style="display:flex;"><span>    <span style="color:#d20f39">long</span> <span style="color:#d20f39">int</span> pad[NPAD];
+</span></span><span style="display:flex;"><span>};
+</span></span></code></pre></div><p>By always advancing via the pointer rather than incrementing an index, both tests do identical work &ndash; the only variable is whether the next memory access is predictable. This isolates exactly one thing: whether the hardware prefetcher can anticipate the next access and hide latency.</p>
+<p>The list is circular, so the traversal loops back to element 0 after visiting all N elements. This is what makes the benchmark clean: once the working set exceeds a cache level, every access at that level is a guaranteed miss. By the time the traversal returns to element 0, all N elements have been loaded through the cache since the last visit, so element 0 has long been evicted. There are no lucky hits from temporal locality — each working set size exercises exactly the cache level being measured.</p>
+<p>The pad field controls element size.<br>
+With NPAD=0, each struct is 8 bytes and 8 elements share a cache line.<br>
+With NPAD=7, each struct is exactly one cache line (8 bytes for pointer, long int size is 8 bytes), so every iteration requires a fresh fetch.</p>
+<p>The working set is varied to push data through each cache level:</p>
+<ul>
+<li>L1d (16KB = 2^14 bytes)</li>
+<li>L2 (1MB = 2^20 bytes)</li>
+<li>Main Memory<br>
+This lets us observe miss costs and prefetcher effectiveness at each level.</li>
+</ul>
+<h3 id="brief-hardware-prefetching">Brief: Hardware Prefetching</h3>
+<p>Prefetching is a technique used to hide the latency of memory access by loading data from main memory into the CPU cache asynchronously before the processor actually needs it.<br>
+This allows memory operations to overlap with the execution of other instructions, reducing the time the CPU spends stalled while waiting for data.<br>
+We only refer to hardware prefetching for now.</p>
+<h3 id="sequential-access-npad0">Sequential Access, NPAD=0</h3>
+<p><figure><img src="/blog/cache-effects-part-two/images/seq-read-npad-zero.png" width="300">
+</figure>
+
+The graph plots cycles per element against working set size, showing three distinct plateaus:</p>
+<p><strong>Up to 2^14 bytes (16KB):</strong> ~4 cycles. The working set fits entirely in L1d, and 4 cycles is exactly the expected L1d hit latency on the P4.</p>
+<figure><img src="/blog/cache-effects-part-two/images/prefetch-residual-stall.png">
+</figure>
+
+<p><strong>2^15 to 2^20 bytes (1MB):</strong> ~9 cycles. The working set spills into L2, whose raw latency is 14+ cycles &ndash; yet we only observe 9. The prefetcher hides the gap: sequential layout lets the CPU detect the stride and fetch the next cache line in the background, so by the time it&rsquo;s needed, most of the latency is already paid.</p>
+<p><strong>Above 2^21 bytes:</strong> still ~9 cycles despite main memory&rsquo;s 200+ cycle raw latency. The prefetcher issues fetches far enough ahead that almost the entire DRAM latency is hidden behind computation.</p>
+<p>The transitions are soft rather than sharp because the cache is shared with the OS and other system activity.</p>
+<h3 id="sequential-access-varied-npad">Sequential Access, Varied NPAD</h3>
+<figure><img src="/blog/cache-effects-part-two/images/seq-read-npad-vary.png" width="300">
+</figure>
+
+<p>The graph plots cycles per element against working set size for four element sizes (NPAD=0, 7, 15, 31), corresponding to element sizes of 8, 64, 128, and 256 bytes.</p>
+<p><strong>L1d region (up to 2^14 bytes):</strong> all four lines match. No prefetching is needed since everything fits in L1d, so element size doesn&rsquo;t matter &ndash; every access hits regardless.</p>
+<p><strong>L2 region (2^15 to 2^20 bytes):</strong> the three larger NPAD lines converge at ~28 cycles &ndash; the raw L2 access latency. With NPAD=7 and above, each element is exactly one cache line, so every iteration demands a fresh fetch with almost no computation in between.<br>
+The prefetcher has no breathing room and stalls on every iteration. NPAD=0 stays low because 8 elements share one cache line, giving the prefetcher 8 iterations to finish the next fetch in the background.</p>
+<p><strong>Beyond L2 (above 2^21 bytes):</strong> the four lines diverge dramatically &ndash; NPAD=31 reaches 320+ cycles, NPAD=15 ~150, NPAD=7 ~50, NPAD=0 stays flat near 10.<br>
+Two compounding factors explain this.<br>
+First, larger elements consume more cache lines per iteration, leaving the prefetcher less time to hide latency.<br>
+Second, the hardware prefetcher cannot cross page boundaries &ndash; it must wait until the CPU actually accesses the first address of the next page before resuming.<br>
+With NPAD=31 only 16 elements fit per 4KB page, so these full-latency stalls occur every 16 iterations. With NPAD=0, 512 elements fit per page, so boundary penalties are negligible.</p>
+<p>The key insight is that prefetching effectiveness depends on two things: access pattern predictability, and whether the element size gives the prefetcher enough breathing room &ndash; both between consecutive fetches and across page boundaries.</p>
+<h3 id="tlb-misses-with-varied-npad-size">TLB Misses With Varied NPAD Size</h3>
+<figure><img src="/blog/cache-effects-part-two/images/tlb-misses.png" width="300">
+</figure>
+
+<p>We can also measure the overhead due to TLB misses by comparing two memory layouts: elements packed contiguously (many per page) versus one element per page (forcing a TLB lookup on every access).</p>
+<p>Take NPAD=7, so each element is 64 bytes (one cache line), and pages are 4KB.</p>
+<figure><img src="/blog/cache-effects-part-two/images/tlb-cache.png" width="300">
+</figure>
+
+<p><strong>Test 1: Sequential layout</strong>
+Elements are packed contiguously. Each page holds 4096/64 = 64 elements, so a new TLB entry is needed every 64 iterations &ndash; one TLB lookup amortized over 64 elements. TLB cost per element is low.</p>
+<p><strong>Test 2: One element per page</strong>
+Each element is placed at the start of its own 4KB page. Every single iteration lands on a new page, requiring a new TLB lookup every iteration &ndash; 64x more TLB lookups for the same number of elements.
+The TLB is small (say 64 entries). In test 2 after 64 elements, every access is a TLB miss, requiring a full page table walk (~100+ cycles).
+Larger element sizes like NPAD=15 and NPAD=31 fall between these extremes &ndash; fewer elements per page means more frequent TLB misses, which compounds the page boundary prefetcher stalls from earlier. Both penalties hit simultaneously.</p>
+<h3 id="write-effects-and-forced-prefetching">Write Effects and Forced Prefetching</h3>
+<figure><img src="/blog/cache-effects-part-two/images/write-prefetch.png" width="300">
+</figure>
+
+<p>We add two new tests with 16-byte elements, alongside the baseline <strong>Follow</strong> test (read-only pointer chase):</p>
+<ul>
+<li><strong>Inc:</strong> increment current element&rsquo;s pad[0], then advance. Writes the current element but has no reason to touch the next one early.</li>
+<li><strong>Addnext0:</strong> add next element&rsquo;s pad[0] into current element&rsquo;s pad[0], then advance. Reads ahead into the next element before advancing.</li>
+</ul>
+<p><strong>L1d:</strong> 16KB =&gt; 2^14 bytes; <strong>L2:</strong> 2MB =&gt; 2^21 bytes</p>
+<p><strong>In the L2 region:</strong> <em>Inc</em> sits visibly above <em>Follow</em>. The cost of arithmetic operations are negligible — the cost comes from write-backs. Modified cache lines are marked dirty and must be written back to L2 on eviction rather than simply discarded, consuming extra bandwidth.</p>
+<p><em>Addnext0</em> matches <em>Follow</em> despite also writing. The read of next-&gt;pad[0] acts as a forced prefetch — the next element is already in L1d by the time the loop advances, which cancels out the write-back overhead.</p>
+<p><strong>Beyond L2:</strong> both <em>Inc</em> and <em>Addnext0</em> plateau at ~28 cycles, double <em>Follow</em>&rsquo;s ~14 cycles. Dirty evictions now consume FSB bandwidth for both a write (dirty line out) and a read (new line in), halving effective bandwidth. <em>Addnext0</em> hits this plateau earlier (at 2^21 vs 2^22) because it always has one extra element resident in cache at any given time — the current element being processed and the next element already prefetched. Each element is still only read once, but the cache always holds one more live element than <em>Inc</em> does, so L2 fills up sooner.</p>
+<h2 id="single-threaded-random-access">Single Threaded Random Access</h2>
+<p>We now access elements in a random order, removing the benefits of prefetching.</p>
+<figure><img src="/blog/cache-effects-part-two/images/seq-vs-rand-cycles.png" width="300">
+</figure>
+
+<p><strong>Random access costs exceed 200-300 cycles — more than raw memory latency</strong>
+The prefetcher is hurting performance by detecting spurious patterns in memory access, wasting FSB bandwidth on useless prefetches. This leaves less bandwidth for your actual demand loads, pushing latency above the theoretical maximum of 200-300 cycles.</p>
+<p><strong>Number of Cycles needed does not plateau as working set size increases</strong>
+As the working set grows, the L2 and TLB miss rates grow continuously with no stable equilibrium.</p>
+<figure><img src="/blog/cache-effects-part-two/images/seq-vs-rand-hit-pct.png" width="300">
+</figure>
+
+<p><strong>Sequential</strong> stays near 0% L2 miss rate across all working set sizes. The prefetcher keeps pulling lines into L2 ahead of demand, so almost every access is a cache hit regardless of how large the working set gets.</p>
+<p><strong>Random</strong> stays near 0% while the working set fits in L2 (below 2^20). Once it exceeds L2, miss rate jumps to ~50% immediately &ndash; because with a 2x overflow, only half the working set fits and random access has equal probability of hitting any address. Miss rate then trends toward 100% as the working set grows, with a slight dip around 2^22-2^25 where heavy TLB misses temporarily reduce the number of L2 accesses being counted, before rising again as both effects saturate.</p>
+
+</content>
+<p>
+  
+</p>
+
+  </main>
+  <footer>Adapted from <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+    
+</body>
+
+</html>
