@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cache Coherence and the MESI Protocol: Part 3 | jieqi&#39;s archive</title>
+<meta name="title" content="Cache Coherence and the MESI Protocol: Part 3" />
+<meta name="description" content="-" />
+<meta name="keywords" content="" />
+
+
+<meta property="og:url" content="http://localhost:1313/blog/cache-coherence-part-three/">
+  <meta property="og:site_name" content="jieqi&#39;s archive">
+  <meta property="og:title" content="Cache Coherence and the MESI Protocol: Part 3">
+  <meta property="og:description" content="-">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2026-04-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-04-13T00:00:00+00:00">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Cache Coherence and the MESI Protocol: Part 3">
+  <meta name="twitter:description" content="-">
+
+
+
+
+  <meta itemprop="name" content="Cache Coherence and the MESI Protocol: Part 3">
+  <meta itemprop="description" content="-">
+  <meta itemprop="datePublished" content="2026-04-13T00:00:00+00:00">
+  <meta itemprop="dateModified" content="2026-04-13T00:00:00+00:00">
+  <meta itemprop="wordCount" content="1079">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+      --width: 720px;
+      --font-main: system-ui, sans-serif;
+      --font-secondary: system-ui, sans-serif;
+      --font-scale: 0.95em;
+       
+      --heading-color: #222; 
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color:  #FC5185;
+      --code-background-color: #eff1f5;
+       
+      --blockquote-color: #222;
+  }
+
+  body {
+      font-family: var(--font-secondary);
+      font-size: var(--font-scale);
+      margin: auto;
+      padding: 20px;
+      max-width: var(--width);
+      text-align: left;
+      background-color: var(--background-color);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.5;
+      color: var(--text-color);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-main);
+      color: var(--heading-color);
+  }
+
+  a {
+      color: var(--link-color);
+      cursor: pointer;
+      text-decoration: none;
+  }
+
+  a:hover {
+      text-decoration: underline;
+  }
+
+  nav a {
+      margin-right: 8px;
+  }
+
+  strong, b {
+      color: var(--heading-color);
+  }
+
+  button {
+      margin: 0;
+      cursor: pointer;
+  }
+
+  time {
+   	font-family: monospace;
+    	font-style: normal;
+    	font-size: 15px;
+  }
+
+  main {
+      line-height: 1.6;
+  }
+
+  table {
+      width: 100%;
+  }
+
+  hr {
+      border: 0;
+      border-top: 1px dashed;
+  }
+
+  img {
+      max-width: 100%;
+  }
+
+  code {
+      font-family: monospace;
+      padding: 2px;
+      background-color: var(--code-background-color);
+      color: var(--code-color);
+      border-radius: 3px;
+      text-size-adjust: 100%;          
+      -ms-text-size-adjust: 100%;      
+      -moz-text-size-adjust: 100%;     
+      -webkit-text-size-adjust: 100%;  
+  }
+
+  blockquote {
+      border-left: 1px solid #999;
+      color: var(--code-color);
+      padding-left: 20px;
+      font-style: italic;
+  }
+
+  footer {
+      padding: 25px 0;
+      text-align: center;
+  }
+
+  .title:hover {
+      text-decoration: none;
+  }
+
+  .title h1 {
+      font-size: 1.5em;
+  }
+
+  .inline {
+      width: auto !important;
+  }
+
+  .highlight, .code {
+      padding: 1px 15px;
+      background-color: var(--code-background-color);
+      color: var(--code-color);
+      border-radius: 3px;
+      margin-block-start: 1em;
+      margin-block-end: 1em;
+      overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+      list-style-type: none;
+      padding: unset;
+  }
+
+  ul.blog-posts li {
+      display: flex;
+  }
+
+  ul.blog-posts li span {
+      flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+      color: var(--visited-color);
+  }
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>jieqi&#39;s archive</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Cache Coherence and the MESI Protocol: Part 3</h1>
+<p>
+  <i>
+    <time datetime='2026-04-13'>
+      13 Apr, 2026
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>This is a continuation from part 2, which covers measurements of cache effects under sequential and random access patterns.
+We explore cache coherence, which is the uniformity of shared resource data that is stored in multiple local caches. This is something to consider when multiple execution contexts (threads or processes) use the
+same region of memory.</p>
+<h2 id="write-through-vs-write-back">Write-Through vs Write-Back</h2>
+<p>These are two strategies for keeping cache and main memory in sync when you write data.</p>
+<p><strong>Write-through</strong> is simple: every write to cache immediately also writes to main memory. Cache and RAM are always identical.<br>
+The problem is performance — if you&rsquo;re incrementing a counter in a loop, every single increment fires a write to main memory over the FSB, even though nobody else needs that value yet.</p>
+<p><strong>Write-back</strong> is smarter: writes only update the cache line and mark it dirty. The write to main memory is deferred until the cache line gets evicted (LRU etc). A tight loop modifying the same variable fires one eventual write to RAM instead of thousands — much better for FSB bandwidth.</p>
+<h2 id="the-problem-multiple-caches-one-memory">The Problem: Multiple Caches, One Memory</h2>
+<p>Write-back creates a problem on multi-processor systems. Each CPU has its own cache, so if CPU 1 has a dirty cache line (modified but not yet written back to RAM) and CPU 2 tries to read that same address, CPU 2 fetches from main memory and gets the stale old value. The correct value is sitting in CPU 1&rsquo;s cache, unreachable.</p>
+<p>This is the cache coherence problem. The hardware must solve it: when CPU 2 requests an address, the system needs to know that CPU 1 holds a dirty version and intercept the read to supply the correct data. This is what cache coherence protocols like MESI handle.</p>
+<h2 id="the-mesi-protocol">The MESI Protocol</h2>
+<p>Each cache line in every processor&rsquo;s cache is tagged with one of four states (2 bits are used):</p>
+<ul>
+<li><strong>Modified (M):</strong> Present only in this cache, and dirty — it has been modified from the value in main memory. The cache must write the data back to main memory before any other cache can read it. The write-back transitions the line to Shared.</li>
+<li><strong>Exclusive (E):</strong> Present only in this cache, but clean — it matches main memory. It may become Shared in response to a read request from another CPU, or Modified when written to locally.</li>
+<li><strong>Shared (S):</strong> May exist in multiple caches and is clean — it matches main memory. The line may be discarded (→ Invalid) at any time.</li>
+<li><strong>Invalid (I):</strong> The cache line is invalid (unused).</li>
+</ul>
+<p>For any given pair of caches, the permitted states of a given cache line are:</p>
+<table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>M</th>
+          <th>E</th>
+          <th>S</th>
+          <th>I</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>M</strong></td>
+          <td>✗</td>
+          <td>✗</td>
+          <td>✗</td>
+          <td>✓</td>
+      </tr>
+      <tr>
+          <td><strong>E</strong></td>
+          <td>✗</td>
+          <td>✗</td>
+          <td>✗</td>
+          <td>✓</td>
+      </tr>
+      <tr>
+          <td><strong>S</strong></td>
+          <td>✗</td>
+          <td>✗</td>
+          <td>✓</td>
+          <td>✓</td>
+      </tr>
+      <tr>
+          <td><strong>I</strong></td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>✓</td>
+      </tr>
+  </tbody>
+</table>
+<p>When a line is M or E in one cache, all other caches must hold it as I.</p>
+<h2 id="state-transitions">State Transitions</h2>
+<p>The MESI protocol is a finite-state machine driven by two types of stimuli.</p>
+<p><strong>Processor requests</strong> — issued by the local CPU:</p>
+<ul>
+<li><strong>PrRd:</strong> processor requests to read a cache block</li>
+<li><strong>PrWr:</strong> processor requests to write a cache block</li>
+</ul>
+<p><strong>Bus-side requests</strong> — snooped from other processors via the shared bus:</p>
+<ul>
+<li><strong>BusRd:</strong> another processor wants to read a block</li>
+<li><strong>BusRdX:</strong> another processor wants to write a block it doesn&rsquo;t currently hold. The X stands for Exclusive — the requester needs the data <em>and</em> exclusive ownership, so all other caches must invalidate their copies. It&rsquo;s not called BusWrite because the processor doesn&rsquo;t have the data yet and must fetch it first; the write comes after.</li>
+<li><strong>BusUpgr:</strong> another processor wants to write a block it already holds in Shared state. Since it already has the data, only invalidation is needed — no data transfer, cheaper than BusRdX.</li>
+<li><strong>Flush:</strong> a cache is writing a dirty block back to main memory.</li>
+<li><strong>FlushOpt:</strong> a cache supplies a block directly to another cache on the bus, bypassing main memory (cache-to-cache transfer). The Opt stands for Optional — main memory may or may not update itself by snooping this transfer. It&rsquo;s faster because cache-to-cache latency is lower than a round-trip through RAM.</li>
+</ul>
+<p><strong>Snooping:</strong> every cache monitors all bus transactions. When a bus request appears, each cache controller checks whether it holds that line and reacts — updating state, supplying data, or invalidating its copy. The memory controller also snoops, stepping in when no cache can supply the line.</p>
+<figure><img src="/blog/cache-coherence-part-three/images/cache-shared-bus.png">
+</figure>
+
+<p>All cache lines start <strong>Invalid</strong>.</p>
+<p><strong>Processor-initiated transitions</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>State</th>
+          <th>Operation</th>
+          <th>New State</th>
+          <th>What happens</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Invalid</td>
+          <td>PrRd</td>
+          <td>E or S</td>
+          <td>Issues BusRd; → E if no other cache responds, → S if others have a copy; data comes from another cache or main memory</td>
+      </tr>
+      <tr>
+          <td>Invalid</td>
+          <td>PrWr</td>
+          <td>M</td>
+          <td>Issues BusRdX; others invalidate their copies; data fetched from another cache or main memory; then written</td>
+      </tr>
+      <tr>
+          <td>Exclusive</td>
+          <td>PrRd</td>
+          <td>E</td>
+          <td>Cache hit — no bus traffic</td>
+      </tr>
+      <tr>
+          <td>Exclusive</td>
+          <td>PrWr</td>
+          <td>M</td>
+          <td>Cache hit — silent upgrade, no bus traffic</td>
+      </tr>
+      <tr>
+          <td>Shared</td>
+          <td>PrRd</td>
+          <td>S</td>
+          <td>Cache hit — no bus traffic</td>
+      </tr>
+      <tr>
+          <td>Shared</td>
+          <td>PrWr</td>
+          <td>M</td>
+          <td>Issues BusUpgr; all other copies → Invalid</td>
+      </tr>
+      <tr>
+          <td>Modified</td>
+          <td>PrRd</td>
+          <td>M</td>
+          <td>Cache hit — no bus traffic</td>
+      </tr>
+      <tr>
+          <td>Modified</td>
+          <td>PrWr</td>
+          <td>M</td>
+          <td>Cache hit — no bus traffic</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Bus-initiated transitions</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>State</th>
+          <th>Operation</th>
+          <th>New State</th>
+          <th>What happens</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Invalid</td>
+          <td>BusRd</td>
+          <td>I</td>
+          <td>Signal ignored</td>
+      </tr>
+      <tr>
+          <td>Invalid</td>
+          <td>BusRdX / BusUpgr</td>
+          <td>I</td>
+          <td>Signal ignored</td>
+      </tr>
+      <tr>
+          <td>Exclusive</td>
+          <td>BusRd</td>
+          <td>S</td>
+          <td>Put FlushOpt on bus with block contents</td>
+      </tr>
+      <tr>
+          <td>Exclusive</td>
+          <td>BusRdX</td>
+          <td>I</td>
+          <td>Put FlushOpt on bus with block contents</td>
+      </tr>
+      <tr>
+          <td>Shared</td>
+          <td>BusRd</td>
+          <td>S</td>
+          <td>May put FlushOpt on bus (design choice — one Shared cache supplies the data)</td>
+      </tr>
+      <tr>
+          <td>Shared</td>
+          <td>BusRdX / BusUpgr</td>
+          <td>I</td>
+          <td>May put FlushOpt on bus (design choice)</td>
+      </tr>
+      <tr>
+          <td>Modified</td>
+          <td>BusRd</td>
+          <td>S</td>
+          <td>Put FlushOpt on bus; memory controller snoops and writes to main memory</td>
+      </tr>
+      <tr>
+          <td>Modified</td>
+          <td>BusRdX</td>
+          <td>I</td>
+          <td>Put FlushOpt on bus; memory controller snoops and writes to main memory</td>
+      </tr>
+  </tbody>
+</table>
+<p>Key insight: E→M is silent — a PrWr on an Exclusive line needs no bus transaction. S→M requires a BusUpgr broadcast to every CPU holding the line. This is why the CPU tries to keep lines Exclusive — it avoids the broadcast on the next write.</p>
+<figure><img src="/blog/cache-coherence-part-three/images/mesi-protocol-transitions.png" width="300">
+</figure>
+
+<p><strong>Not all transitions generate bus traffic.</strong> PrRd and PrWr that hit a cached line (M, E, or S) are resolved entirely within the local cache — no bus activity. Bus transactions only occur when:</p>
+<ul>
+<li>The line is Invalid — a BusRd or BusRdX goes on the bus</li>
+<li>A Shared line is written — BusUpgr invalidates all other copies</li>
+<li>A Modified line is snooped — the owner flushes to RAM before the requesting CPU can proceed</li>
+</ul>
+<h2 id="implications-for-performance">Implications for Performance</h2>
+<h3 id="false-sharing">False Sharing</h3>
+<h3 id="write-amplification">Write Amplification</h3>
+<h2 id="variants-mesif-and-moesi">Variants: MESIF and MOESI</h2>
+<h2 id="resources">Resources</h2>
+
+</content>
+<p>
+  
+</p>
+
+  </main>
+  <footer>Adapted from <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+    
+</body>
+
+</html>

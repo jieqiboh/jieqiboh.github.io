@@ -6,8 +6,15 @@
     <description>Recent content in Blogs on jieqi&#39;s archive</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 11 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 13 Apr 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cache Coherence and the MESI Protocol: Part 3</title>
+      <link>http://localhost:1313/blog/cache-coherence-part-three/</link>
+      <pubDate>Mon, 13 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/blog/cache-coherence-part-three/</guid>
+      <description>&lt;p&gt;This is a continuation from part 2, which covers measurements of cache effects under sequential and random access patterns.&#xA;We explore cache coherence, which is the uniformity of shared resource data that is stored in multiple local caches. This is something to consider when multiple execution contexts (threads or processes) use the&#xA;same region of memory.&lt;/p&gt;&#xA;&lt;h2 id=&#34;write-through-vs-write-back&#34;&gt;Write-Through vs Write-Back&lt;/h2&gt;&#xA;&lt;p&gt;These are two strategies for keeping cache and main memory in sync when you write data.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Measurements of Cache Effects: Part 2</title>
       <link>http://localhost:1313/blog/cache-effects-part-two/</link>
