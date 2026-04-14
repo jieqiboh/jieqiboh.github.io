@@ -29,7 +29,7 @@ We want to measure how access pattern (sequential vs random) and working set siz
 **Sequential:** each element's n points to the next element in memory order, so pointer chasing happens to walk linearly through the array  
 **Random:** the n pointers are shuffled, so each dereference jumps to an unpredictable location  
 
-![](/images/cache-effects-part-two/seq-rand.png)
+<img src="/images/cache-effects-part-two/seq-rand.png" width="300" />
 
 ```c
 struct l {
@@ -62,7 +62,7 @@ We only refer to hardware prefetching for now.
 
 ### Sequential Access, NPAD=0
 
-![](/images/cache-effects-part-two/seq-read-npad-zero.png)
+<img src="/images/cache-effects-part-two/seq-read-npad-zero.png" width="300" />
 
 The graph plots cycles per element against working set size, showing three distinct plateaus:
 
@@ -78,7 +78,7 @@ The transitions are soft rather than sharp because the cache is shared with the 
 
 ### Sequential Access, Varied NPAD
 
-![](/images/cache-effects-part-two/seq-read-npad-vary.png)
+<img src="/images/cache-effects-part-two/seq-read-npad-vary.png" width="300" />
 
 The graph plots cycles per element against working set size for four element sizes (NPAD=0, 7, 15, 31), corresponding to element sizes of 8, 64, 128, and 256 bytes.
 
@@ -97,13 +97,13 @@ The key insight is that prefetching effectiveness depends on two things: access 
 
 ### TLB Misses With Varied NPAD Size
 
-![](/images/cache-effects-part-two/tlb-misses.png)
+<img src="/images/cache-effects-part-two/tlb-misses.png" width="300" />
 
 We can also measure the overhead due to TLB misses by comparing two memory layouts: elements packed contiguously (many per page) versus one element per page (forcing a TLB lookup on every access).
 
 Take NPAD=7, so each element is 64 bytes (one cache line), and pages are 4KB.  
 
-![](/images/cache-effects-part-two/tlb-cache.png)
+<img src="/images/cache-effects-part-two/tlb-cache.png" width="300" />
 
 **Test 1: Sequential layout**
 Elements are packed contiguously. Each page holds 4096/64 = 64 elements, so a new TLB entry is needed every 64 iterations -- one TLB lookup amortized over 64 elements. TLB cost per element is low.
@@ -115,7 +115,7 @@ Larger element sizes like NPAD=15 and NPAD=31 fall between these extremes -- few
 
 ### Write Effects and Forced Prefetching
 
-![](/images/cache-effects-part-two/write-prefetch.png)
+<img src="/images/cache-effects-part-two/write-prefetch.png" width="300" />
 
 We add two new tests with 16-byte elements, alongside the baseline **Follow** test (read-only pointer chase):
 
@@ -134,7 +134,7 @@ We add two new tests with 16-byte elements, alongside the baseline **Follow** te
 
 We now access elements in a random order, removing the benefits of prefetching.
 
-![](/images/cache-effects-part-two/seq-vs-rand-cycles.png)
+<img src="/images/cache-effects-part-two/seq-vs-rand-cycles.png" width="300" />
 
 **Random access costs exceed 200-300 cycles — more than raw memory latency**
 The prefetcher is hurting performance by detecting spurious patterns in memory access, wasting FSB bandwidth on useless prefetches. This leaves less bandwidth for your actual demand loads, pushing latency above the theoretical maximum of 200-300 cycles.
@@ -142,7 +142,7 @@ The prefetcher is hurting performance by detecting spurious patterns in memory a
 **Number of Cycles needed does not plateau as working set size increases**
 As the working set grows, the L2 and TLB miss rates grow continuously with no stable equilibrium.
 
-![](/images/cache-effects-part-two/seq-vs-rand-hit-pct.png)
+<img src="/images/cache-effects-part-two/seq-vs-rand-hit-pct.png" width="300" />
 
 **Sequential** stays near 0% L2 miss rate across all working set sizes. The prefetcher keeps pulling lines into L2 ahead of demand, so almost every access is a cache hit regardless of how large the working set gets.
 

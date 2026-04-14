@@ -13,8 +13,20 @@
       @apply mb-3 text-foreground;
     }
 
+    h1 {
+      @apply dark:text-[#bb9af7];
+    }
+
+    h2 {
+      @apply dark:text-[#7aa2f7];
+    }
+
     h3 {
-      @apply italic;
+      @apply italic dark:text-[#7dcfff];
+    }
+
+    h4 {
+      @apply dark:text-[#9ece6a];
     }
 
     p,

@@ -21,7 +21,7 @@ Say we write the following in C++:
 std::string s1 = "hello";
 ```
 
-![](/images/copy-move-semantics/1.png)
+<img src="/images/copy-move-semantics/1.png" width="300" />
 
 As can be seen, s1 is stored on the stack, and contains a pointer to the string "hello" stored on the heap, and thus is considered its owner. As std::string follows [RAII](https://en.cppreference.com/w/cpp/language/raii), once s1 goes out of scope, its heap allocated "hello" gets deleted as well.
 
@@ -35,14 +35,14 @@ std::string s1 = "hello";
 std::string s2 = s1;
 ```
 
-![](/images/copy-move-semantics/2.png)
+<img src="/images/copy-move-semantics/2.png" width="300" />
 
 C++ actually performs a deep copy, allocating more space on the heap and copying the contents of s1 over!
 (Note that whether a deep or shallow copy is performed depends on the type and how its copy assignment operator is implemented. For strings a deep copy is done.)
 
 Instead, what we hope to achieve is a _transferral of ownership_, where s2 points to the original dynamically allocated string on the heap, and s1 loses its pointer to it.
 
-![](/images/copy-move-semantics/3.png)
+<img src="/images/copy-move-semantics/3.png" width="300" />
 
 ```cpp
 std::string s1 = "hello";

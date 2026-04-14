@@ -95,7 +95,7 @@ All cache lines start **Invalid**.
 
 Key insight: E→M is silent — a PrWr on an Exclusive line needs no bus transaction. S→M requires a BusUpgr broadcast to every CPU holding the line. This is why the CPU tries to keep lines Exclusive — it avoids the broadcast on the next write.
 
-![](/images/cache-coherence-part-three/mesi-protocol-transitions.png)
+<img src="/images/cache-coherence-part-three/mesi-protocol-transitions.png" width="300" />
 
 **Not all transitions generate bus traffic.** PrRd and PrWr that hit a cached line (M, E, or S) are resolved entirely within the local cache — no bus activity. Bus transactions only occur when:
 

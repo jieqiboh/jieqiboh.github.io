@@ -44,7 +44,7 @@ This incurs a larger penalty on misses, since it takes longer to transfer the bl
 Consider a 1024-line DM Cache with block size = 1 word. If we have a loop in a program that accesses 2 regions in physical memory that correspond to the same cache line, they will be competing for the same cache line slot, leading to repeated misses!  
 Hit rate = 0%
 
-![](/images/a-cache-refresher/dm-conflict.png)
+<img src="/images/a-cache-refresher/dm-conflict.png" width="400" />
 
 ```c
 #include <stdio.h>
@@ -124,7 +124,7 @@ On a read:
 - If any way's tag matches - hit, use offset to return the right byte
 - If no way matches - miss, fetch from DRAM, place in any way within set 5 (e.g. LRU eviction)
 
-![](/images/a-cache-refresher/nsa-cache-1.png)
+<img src="/images/a-cache-refresher/nsa-cache-1.png" width="400" />
 
 Generally L2 caches use associativity levels of up to 24, while L1 caches get by with 8 sets.
 
@@ -141,7 +141,7 @@ Cache size has the biggest impact by far. Going from 512k to 16M reduces misses 
 
 Cache line size (CL=32 vs CL=64) consistently matters too. Doubling the line size reduces misses significantly at every cache size and associativity level, because you fetch more spatial neighbors per miss, amortizing the miss cost over more usable data.
 
-![](/images/a-cache-refresher/cachesize-vs-assoc.png)
+<img src="/images/a-cache-refresher/cachesize-vs-assoc.png" width="250" />
 
 Associativity shows diminishing returns. The jump from direct-mapped to 2-way gives the biggest gain. From 2 to 4, smaller gain. From 4 to 8, almost nothing - look at 8M and 16M rows, the numbers barely budge between 4-way and 8-way. This matches the earlier discussion: at 8M and 16M, the 5.6MB working set fits comfortably, so conflict pressure is already low and more associativity can't help much.
 

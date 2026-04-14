@@ -18,7 +18,7 @@ tags: []
 Conventional LoWPANs (Low-Power Wireless Personal Area Networks) employ [IEEE 802.15.4](https://en.wikipedia.org/wiki/IEEE_802.15.4) links, which have characteristics such as low-power consumption, small frame sizes and limited connectivity.  
 Some examples include a smart home sensor network, where there are temperature, humidity, and motion sensors all running on tiny batteries and communicating wirelessly.
 
-![](/images/gsoc2025-6lowpan-nd/lowpan.png)
+<img src="/images/gsoc2025-6lowpan-nd/lowpan.png" width="400" />
 
 In these types of networks, we can expect small packet sizes, low power consumption (typically in the milliwatt range), and low transfer rates (~250 kbit/s).
 
@@ -39,7 +39,7 @@ Implementation is split into 2 phases:
 In phase 1, the end-goal was to achieve a functioning mesh-under topology comprising n 6LNs (6LoWPAN Node) and a single 6LBR (6LoWPAN Border Router).  
 In the aforementioned topology, the 6LNs should be able to undergo the address registration bootstrapping process, as well as successfully ping the 6LBR.  
 
-![](/images/gsoc2025-6lowpan-nd/meshundertopology.png)
+<img src="/images/gsoc2025-6lowpan-nd/meshundertopology.png" width="400" />
 
 - **Features:** ROVR validation as specified in RFC8505 
 - **Bugfixes:** Refactored the existing address registration logic, identifying an assumption regarding concurrent address registrations which caused them to fail.  
@@ -54,7 +54,7 @@ Support for multi-hop Duplicate Address Detection is added in this phase, and 6L
 Originally, we intended to implement the 6LR, but decided to pivot to implementing the 6BBR, which was introduced in RFC8929, since it is able to modify and perform proxy DAD according to its specifications, making it more suited for our use case.
 In the aforementioned topology, the 6LNs should be able to undergo the address registration bootstrapping process, as well as successfully ping the 6LBR.  
 
-![](/images/gsoc2025-6lowpan-nd/routeovertopology.png)
+<img src="/images/gsoc2025-6lowpan-nd/routeovertopology.png" width="500" />
 
 - **Features:** Multi-hop Duplicate Address Detection via Extended Duplicate Address Registration / Confirmation messages (EDAR / EDAC).
 - **Bugfixes:** Refactored the existing data structure used to store address registration information by creating the 6LoWPAN Binding Table class.

@@ -9,9 +9,9 @@ tags: []
 
 taken with a sony a73
 
-![](/images/jan-2025-photo-dump/1.jpg)
-![](/images/jan-2025-photo-dump/2.jpg)
-![](/images/jan-2025-photo-dump/3.jpg)
-![](/images/jan-2025-photo-dump/4.jpg)
-![](/images/jan-2025-photo-dump/5.jpg)
-![](/images/jan-2025-photo-dump/6.jpg)
+<img src="/images/jan-2025-photo-dump/1.jpg" width="500" />
+<img src="/images/jan-2025-photo-dump/2.jpg" width="500" />
+<img src="/images/jan-2025-photo-dump/3.jpg" width="500" />
+<img src="/images/jan-2025-photo-dump/4.jpg" width="500" />
+<img src="/images/jan-2025-photo-dump/5.jpg" width="500" />
+<img src="/images/jan-2025-photo-dump/6.jpg" width="500" />

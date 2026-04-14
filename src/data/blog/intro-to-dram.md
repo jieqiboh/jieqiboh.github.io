@@ -40,7 +40,7 @@ Because the cell capacitor is tiny relative to the bitline, the charge it dumps 
 Let's think of implementing DRAM with N cells is a 1D layout: 1 wordline is connected to all N cells, with N bitlines (one per cell) and N sense amplifiers at the end of each bitline. To read a specific cell, you assert the wordline and read the corresponding bitline.  
 The problem is the wiring - N bitlines and N sense amplifiers running the full length of the chip. For a modest 256MB chip (2 billion cells), that's 2 billion bitlines and 2 billion sense amplifiers.
 
-![](/images/intro-to-dram/1d-dram.jpg)
+<img src="/images/intro-to-dram/1d-dram.jpg" width="400" />
 
 The solution is a 2D grid. Cells are arranged in rows and columns. To address any single cell, you only need to specify two coordinates: which row, and which column. A memory array (mat) is exactly this: a rectangular grid of cells where all cells in a row share a wordline, and all cells in a column share a bitline.
 
@@ -70,7 +70,7 @@ Setup: 8 x8 DRAM chips on 1 side of a DIMM, each forming a single rank. Each chi
 - **DRAM chip**: One physical IC containing multiple banks. All banks receive the same row and column address simultaneously, each contributing 8 bits to the output.  
 Red: Array; Green: Bank
 
-![](/images/intro-to-dram/dramchip.png)
+<img src="/images/intro-to-dram/dramchip.png" width="200" />
 
 - **Rank**: Multiple DRAM chips wired in parallel, presenting a bus to the memory controller. All chips receive the same row and column address simultaneously - each holds *different data* at that location. Chip 0 outputs bits 0–7, chip 1 outputs bits 8–15, and so on; their outputs are concatenated to form the full 64-bit bus word (8 x8 chips × 8 bits = 64 bits). The parallelism is in width, not in accessing different locations.
 *Note: the rank's bus width (64-bit for DDR) has no direct correspondence to the CPU's architectural word size (32-bit vs 64-bit) — it's a convention set by the memory controller and DDR standard.*
@@ -79,7 +79,7 @@ Red: Array; Green: Bank
 
 - **DIMM**: The physical stick of RAM. Can contain one or two ranks.
 
-![](/images/intro-to-dram/dimm.png)
+<img src="/images/intro-to-dram/dimm.png" width="200" />
 
 The full hierarchy is: **cell → row/column → memory array → bank → rank → DIMM**.
 
