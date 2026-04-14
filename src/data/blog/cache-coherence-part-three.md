@@ -69,29 +69,29 @@ All cache lines start **Invalid**.
 
 **Processor-initiated transitions**
 
-| State | Operation | New State | What happens |
-|---|---|---|---|
-| Invalid | PrRd | E or S | Issues BusRd; → E if no other cache responds, → S if others have a copy; data comes from another cache or main memory |
-| Invalid | PrWr | M | Issues BusRdX; others invalidate their copies; data fetched from another cache or main memory; then written |
-| Exclusive | PrRd | E | Cache hit — no bus traffic |
-| Exclusive | PrWr | M | Cache hit — silent upgrade, no bus traffic |
-| Shared | PrRd | S | Cache hit — no bus traffic |
-| Shared | PrWr | M | Issues BusUpgr; all other copies → Invalid |
-| Modified | PrRd | M | Cache hit — no bus traffic |
-| Modified | PrWr | M | Cache hit — no bus traffic |
+| Initial State | Operation | Response |
+|---|---|---|
+| Invalid | PrRd | Issue BusRd on bus.<br>Others check if they have a valid copy and inform sender.<br>→ S if another cache has a copy; → E if none (must wait for all to report).<br>Data supplied by another cache or fetched from main memory. |
+| Invalid | PrWr | Issue BusRdX on bus. → M.<br>Others send value if they have it, else fetch from main memory.<br>Others see BusRdX and invalidate their copies.<br>Write into cache block. |
+| Exclusive | PrRd | Cache hit — no bus traffic. State remains E. |
+| Exclusive | PrWr | Cache hit — no bus traffic. Silent E→M upgrade. |
+| Shared | PrRd | Cache hit — no bus traffic. State remains S. |
+| Shared | PrWr | Issue BusUpgr on bus. → M.<br>Other caches see BusUpgr and mark their copies Invalid. |
+| Modified | PrRd | Cache hit — no bus traffic. State remains M. |
+| Modified | PrWr | Cache hit — no bus traffic. State remains M. |
 
 **Bus-initiated transitions**
 
-| State | Operation | New State | What happens |
-|---|---|---|---|
-| Invalid | BusRd | I | Signal ignored |
-| Invalid | BusRdX / BusUpgr | I | Signal ignored |
-| Exclusive | BusRd | S | Put FlushOpt on bus with block contents |
-| Exclusive | BusRdX | I | Put FlushOpt on bus with block contents |
-| Shared | BusRd | S | May put FlushOpt on bus (design choice — one Shared cache supplies the data) |
-| Shared | BusRdX / BusUpgr | I | May put FlushOpt on bus (design choice) |
-| Modified | BusRd | S | Put FlushOpt on bus; memory controller snoops and writes to main memory |
-| Modified | BusRdX | I | Put FlushOpt on bus; memory controller snoops and writes to main memory |
+| Initial State | Operation | Response |
+|---|---|---|
+| Invalid | BusRd | No state change. Signal ignored. |
+| Invalid | BusRdX / BusUpgr | No state change. Signal ignored. |
+| Exclusive | BusRd | → S (implies a read in another cache).<br>Put FlushOpt on bus with block contents. |
+| Exclusive | BusRdX | → I.<br>Put FlushOpt on bus with block contents. |
+| Shared | BusRd | No state change.<br>May put FlushOpt on bus with block contents (design choice — one Shared cache supplies the data). |
+| Shared | BusRdX / BusUpgr | → I (cache that sent BusRdX/BusUpgr becomes Modified).<br>May put FlushOpt on bus with block contents (design choice). |
+| Modified | BusRd | → S.<br>Put FlushOpt on bus with data.<br>Received by sender of BusRd and memory controller, which writes to main memory. |
+| Modified | BusRdX | → I.<br>Put FlushOpt on bus with data.<br>Received by sender of BusRdX and memory controller, which writes to main memory. |
 
 Key insight: E→M is silent — a PrWr on an Exclusive line needs no bus transaction. S→M requires a BusUpgr broadcast to every CPU holding the line. This is why the CPU tries to keep lines Exclusive — it avoids the broadcast on the next write.
 
