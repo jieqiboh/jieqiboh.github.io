@@ -7,8 +7,9 @@ draft: false
 tags: []
 ---
 
-This is a continuation from part 2, which covers measurements of cache effects under sequential and random access patterns.
-We explore cache coherence, which is the uniformity of shared resource data that is stored in multiple local caches. This is something to consider when multiple execution contexts (threads or processes) use the
+This is a continuation from part 2, which covers measurements of cache effects under sequential and random access patterns.  
+We explore cache coherence, which is the uniformity of shared resource data that is stored in multiple local caches.  
+This is something to consider when multiple execution contexts (threads or processes) use the
 same region of memory.
 
 ## Write-Through vs Write-Back
@@ -32,7 +33,7 @@ Each cache line in every processor's cache is tagged with one of four states (2 
 
 - **Modified (M):** Present only in this cache, and dirty — it has been modified from the value in main memory. The cache must write the data back to main memory before any other cache can read it. The write-back transitions the line to Shared.
 - **Exclusive (E):** Present only in this cache, but clean — it matches main memory. It may become Shared in response to a read request from another CPU, or Modified when written to locally.
-- **Shared (S):** May exist in multiple caches and is clean — it matches main memory. The line may be discarded (→ Invalid) at any time.
+- **Shared (S):** May exist in multiple caches and is clean — it matches main memory. The line may be discarded (⇒ Invalid) at any time.
 - **Invalid (I):** The cache line is invalid (unused).
 
 For any given pair of caches, the permitted states of a given cache line are:
@@ -71,12 +72,12 @@ All cache lines start **Invalid**.
 
 | Initial State | Operation | Response |
 |---|---|---|
-| Invalid | PrRd | Issue BusRd on bus.<br>Others check if they have a valid copy and inform sender.<br>→ S if another cache has a copy; → E if none (must wait for all to report).<br>Data supplied by another cache or fetched from main memory. |
-| Invalid | PrWr | Issue BusRdX on bus. → M.<br>Others send value if they have it, else fetch from main memory.<br>Others see BusRdX and invalidate their copies.<br>Write into cache block. |
+| Invalid | PrRd | Issue BusRd on bus.<br>Others check if they have a valid copy and inform sender.<br>⇒ S if another cache has a copy; ⇒ E if none (must wait for all to report).<br>Data supplied by another cache or fetched from main memory. |
+| Invalid | PrWr | Issue BusRdX on bus. ⇒ M.<br>Others send value if they have it, else fetch from main memory.<br>Others see BusRdX and invalidate their copies.<br>Write into cache block. |
 | Exclusive | PrRd | Cache hit — no bus traffic. State remains E. |
-| Exclusive | PrWr | Cache hit — no bus traffic. Silent E→M upgrade. |
+| Exclusive | PrWr | Cache hit — no bus traffic. Silent E⇒M upgrade. |
 | Shared | PrRd | Cache hit — no bus traffic. State remains S. |
-| Shared | PrWr | Issue BusUpgr on bus. → M.<br>Other caches see BusUpgr and mark their copies Invalid. |
+| Shared | PrWr | Issue BusUpgr on bus. ⇒ M.<br>Other caches see BusUpgr and mark their copies Invalid. |
 | Modified | PrRd | Cache hit — no bus traffic. State remains M. |
 | Modified | PrWr | Cache hit — no bus traffic. State remains M. |
 
@@ -86,29 +87,28 @@ All cache lines start **Invalid**.
 |---|---|---|
 | Invalid | BusRd | No state change. Signal ignored. |
 | Invalid | BusRdX / BusUpgr | No state change. Signal ignored. |
-| Exclusive | BusRd | → S (implies a read in another cache).<br>Put FlushOpt on bus with block contents. |
-| Exclusive | BusRdX | → I.<br>Put FlushOpt on bus with block contents. |
+| Exclusive | BusRd | ⇒ S (implies a read in another cache).<br>Put FlushOpt on bus with block contents. |
+| Exclusive | BusRdX | ⇒ I.<br>Put FlushOpt on bus with block contents. |
 | Shared | BusRd | No state change.<br>May put FlushOpt on bus with block contents (design choice — one Shared cache supplies the data). |
-| Shared | BusRdX / BusUpgr | → I (cache that sent BusRdX/BusUpgr becomes Modified).<br>May put FlushOpt on bus with block contents (design choice). |
-| Modified | BusRd | → S.<br>Put FlushOpt on bus with data.<br>Received by sender of BusRd and memory controller, which writes to main memory. |
-| Modified | BusRdX | → I.<br>Put FlushOpt on bus with data.<br>Received by sender of BusRdX and memory controller, which writes to main memory. |
+| Shared | BusRdX / BusUpgr | ⇒ I (cache that sent BusRdX/BusUpgr becomes Modified).<br>May put FlushOpt on bus with block contents (design choice). |
+| Modified | BusRd | ⇒ S.<br>Put FlushOpt on bus with data.<br>Received by sender of BusRd and memory controller, which writes to main memory. |
+| Modified | BusRdX | ⇒ I.<br>Put FlushOpt on bus with data.<br>Received by sender of BusRdX and memory controller, which writes to main memory. |
 
-Key insight: E→M is silent — a PrWr on an Exclusive line needs no bus transaction. S→M requires a BusUpgr broadcast to every CPU holding the line. This is why the CPU tries to keep lines Exclusive — it avoids the broadcast on the next write.
+Key insight: E⇒M is silent — a PrWr on an Exclusive line needs no bus transaction. S⇒M requires a BusUpgr broadcast to every CPU holding the line. This is why the CPU tries to keep lines Exclusive — it avoids the broadcast on the next write.
 
-<img src="/images/cache-coherence-part-three/mesi-protocol-transitions.png" width="300" />
-
-**Not all transitions generate bus traffic.** PrRd and PrWr that hit a cached line (M, E, or S) are resolved entirely within the local cache — no bus activity. Bus transactions only occur when:
-
-- The line is Invalid — a BusRd or BusRdX goes on the bus
-- A Shared line is written — BusUpgr invalidates all other copies
-- A Modified line is snooped — the owner flushes to RAM before the requesting CPU can proceed
+<div style="display:flex; gap:1rem; align-items:flex-start; flex-wrap:wrap;">
+  <img src="/images/cache-coherence-part-three/mesi-protocol-transitions.png" width="300" />
+  <img src="/images/cache-coherence-part-three/mesi-fsm.GIF" width="300" />
+</div>
 
 ## Implications for Performance
 
-### False Sharing
+Three related bottlenecks emerge when multiple CPUs share memory.
 
-### Write Amplification
+**Coherence protocol latency:** A MESI transition can't complete until every CPU has acknowledged the message — the slowest reply sets the pace. Bus collisions, NUMA latency, and high traffic volume all worsen this. Keep RFOs (Read-For-Ownership) infrequent.
 
-## Variants: MESIF and MOESI
+**Shared FSB bandwidth:** The FSB is a shared resource. If one CPU can saturate it alone, two or four CPUs sharing it each get proportionally less. Even with separate per-CPU buses to the memory controller, concurrent accesses to the same memory module still contend.
 
-## Resources
+**Synchronization bandwidth:** Even in AMD's model where each CPU has local memory, multithreaded programs must periodically synchronize through shared memory regions. That traffic competes for the same finite bus bandwidth.
+
+Concurrency is fundamentally limited by memory bandwidth. Multithreaded programs must minimize the number of CPUs touching the same memory locations — which is exactly what the next section's measurements demonstrate.
