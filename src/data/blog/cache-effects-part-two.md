@@ -93,7 +93,7 @@ First, larger elements consume more cache lines per iteration, leaving the prefe
 Second, the hardware prefetcher cannot cross page boundaries -- it must wait until the CPU actually accesses the first address of the next page before resuming.  
 With NPAD=31 only 16 elements fit per 4KB page, so these full-latency stalls occur every 16 iterations. With NPAD=0, 512 elements fit per page, so boundary penalties are negligible.
 
-The key insight is that prefetching effectiveness depends on two things: access pattern predictability, and whether the element size gives the prefetcher enough breathing room -- both between consecutive fetches and across page boundaries.
+Prefetching only helps when two things line up: the access pattern is predictable, and the element size gives the prefetcher enough breathing room between fetches and across page boundaries.
 
 ### TLB Misses With Varied NPAD Size
 

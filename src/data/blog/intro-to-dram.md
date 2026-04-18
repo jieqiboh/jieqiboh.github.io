@@ -7,7 +7,7 @@ draft: false
 tags: []
 ---
 
-This is part of a series on topics I found fascinating while reading Ulrich Drepper's "What Every Programmer Should Know About Memory". I felt the original text's coverage of DRAM architecture lacked visuals and a clear description of the hierarchy - from DIMMs and banks, down to memory arrays, rows, columns, and individual transistors. This post aims to supplement that and cement my own understanding.
+Part of a series based on Ulrich Drepper's "What Every Programmer Should Know About Memory". Drepper's coverage of DRAM architecture is a bit sparse on visuals and the physical hierarchy, so this is my attempt to fill that in — from DIMMs and banks down to memory arrays, rows, columns, and individual transistors.
 
 ## Types of RAM, and what is DRAM
 

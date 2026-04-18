@@ -7,13 +7,13 @@ draft: false
 tags: []
 ---
 
-The previous post ended with a problem: `T&&` with a deduced `T` accepts every type, so templates can show up in overload resolution where they don't belong. SFINAE is how you control that.
+The previous post ended with a problem: `T&&` with a deduced `T` accepts every type, so templates can show up in overload resolution where they don't belong. SFINAE is how you fix that.
 
 ## The Core Rule
 
 When the compiler resolves a call, it builds a candidate list by substituting actual types into each template's signature. If substitution produces an invalid expression, the candidate is silently dropped — no error. This is SFINAE: Substitution Failure Is Not An Error.
 
-The important word is *signature*. SFINAE only applies to failures in the function signature — return type, parameter types, template parameters. Failures in the function body are always hard errors.
+Failures in the function *signature* are silent. Failures in the function *body* are hard errors.
 
 ```cpp
 template <typename T>
@@ -28,7 +28,7 @@ void bar(T val) {
     typename T::value_type x;  // body -- hard error
 }
 
-bar<int>(42);  // error -- SFINAE doesn't reach the body
+bar<int>(42);  // error -- body failures aren't covered by SFINAE
 ```
 
 If every candidate drops out, you get "no matching function." If at least one survives, the failures of the others are invisible.
@@ -51,11 +51,11 @@ process(std::vector<int>{});  // first overload -- vector has ::iterator
 process(42);                  // first overload dropped (int has no ::iterator), fallback wins
 ```
 
-`...` means "accept any number of arguments of any type." Overload resolution ranks it dead last, so it only wins when everything else was dropped. It's different from C++11 variadic templates (`typename... Args`), which are type-safe and compile-time. The C-style `...` predates the type system entirely — in modern C++ its only real job is this kind of fallback.
+`...` means "accept any number of arguments of any type." Overload resolution ranks it dead last — it only wins when everything else failed. It's different from C++11 variadic templates (`typename... Args`), which are type-safe and compile-time. The C-style `...` predates the type system; in modern C++ its only real job is this kind of fallback.
 
 ## `std::enable_if` — The Standard Tool
 
-Raw SFINAE like above is fragile. `std::enable_if` is the standard way to engineer a substitution failure on purpose:
+Raw SFINAE like above is fragile. `std::enable_if` is the standard way to engineer a substitution failure deliberately:
 
 ```cpp
 // Primary template -- empty, no ::type
@@ -69,9 +69,9 @@ struct enable_if<true, T> {
 };
 ```
 
-That's the whole thing — partial specialization on a bool. When `Condition` is false, the struct is empty. Accessing `::type` on it is invalid, which triggers substitution failure in the signature, which drops the overload.
+Just partial specialization on a bool. When `Condition` is false, the struct is empty — accessing `::type` is invalid, which triggers substitution failure, which drops the overload.
 
-`enable_if_t` just hides the `typename ... ::type` noise:
+`enable_if_t` hides the `typename ... ::type` noise:
 
 ```cpp
 template <bool Condition, typename T = void>
@@ -98,7 +98,7 @@ process(3.14);  // second overload
 process("hi");  // hard error -- both drop out
 ```
 
-`std::enable_if_t<..., void>` is the return type here. The return type is just an expression — it can be a template that fails to resolve. When the condition is false, the return type is invalid, the signature fails, and the overload is dropped before the body is touched.
+`std::enable_if_t<..., void>` is the return type. Return types can be any valid type expression, including one that fails to resolve. When the condition is false, the return type is invalid, the signature fails, and the overload is dropped before the body is touched.
 
 ## Where `enable_if` Can Live
 
@@ -124,9 +124,9 @@ All three drop the overload when the condition is false. Option 2 is what you'll
 
 ## Using SFINAE to Fight SFINAE
 
-The language rule is that substitution failure in a signature is silent. That rule exists so template overloads can coexist without accidentally erroring on types they don't apply to.
+The rule is that substitution failure in a signature is silent — it exists so template overloads can coexist without accidentally erroring on types they don't apply to.
 
-`enable_if` turns this around — it deliberately constructs a substitution failure to eliminate overloads you don't want:
+`enable_if` turns this around. It deliberately constructs a substitution failure to kill overloads you don't want:
 
 ```
 SFINAE as safety net:
@@ -136,7 +136,7 @@ SFINAE as weapon (enable_if):
     "make this overload deliberately invalid for T when my condition is false"
 ```
 
-The compiler can't tell the difference between an accidental and an intentional failure. So you pick the exact moment you want an overload gone — `::type` on an empty struct, guaranteed invalid when the condition is false — and plant the failure there.
+The compiler can't tell the difference between accidental and intentional. So you plant the failure exactly where you want it — `::type` on an empty struct, guaranteed invalid when the condition is false.
 
 ## The Full Picture
 
@@ -172,7 +172,7 @@ template <std::integral T>
 void process(T val) { ... }
 ```
 
-The main practical difference is error messages:
+The real difference shows up in error messages:
 
 ```
 // SFINAE:
@@ -184,4 +184,4 @@ error: no matching function for call to 'process'
 note: constraint 'std::integral<double>' was not satisfied
 ```
 
-Concepts tell you exactly what failed. SFINAE errors send you hunting through template internals. For new C++20 code, prefer concepts. SFINAE still matters for reading older codebases and understanding what concepts are doing under the hood.
+Concepts tell you exactly what failed. SFINAE errors send you hunting through template internals. For new C++20 code, prefer concepts. SFINAE still matters for reading older codebases and understanding what's happening underneath.

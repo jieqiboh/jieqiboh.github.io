@@ -7,10 +7,7 @@ draft: false
 tags: []
 ---
 
-This is a continuation from part 2, which covers measurements of cache effects under sequential and random access patterns.  
-We explore cache coherence, which is the uniformity of shared resource data that is stored in multiple local caches.  
-This is something to consider when multiple execution contexts (threads or processes) use the
-same region of memory.
+Continuation from part 2. This covers cache coherence — what happens when multiple CPUs each have their own cache but share the same memory.
 
 ## Write-Through vs Write-Back
 
@@ -103,7 +100,7 @@ Key insight: E⇒M is silent — a PrWr on an Exclusive line needs no bus transa
 
 ## Implications for Performance
 
-Three related bottlenecks emerge when multiple CPUs share memory.
+A few bottlenecks come up when multiple CPUs share memory.
 
 **Coherence protocol latency:** A MESI transition can't complete until every CPU has acknowledged the message — the slowest reply sets the pace. Bus collisions, NUMA latency, and high traffic volume all worsen this. Keep RFOs (Read-For-Ownership) infrequent.
 
@@ -111,4 +108,4 @@ Three related bottlenecks emerge when multiple CPUs share memory.
 
 **Synchronization bandwidth:** Even in AMD's model where each CPU has local memory, multithreaded programs must periodically synchronize through shared memory regions. That traffic competes for the same finite bus bandwidth.
 
-Concurrency is fundamentally limited by memory bandwidth. Multithreaded programs must minimize the number of CPUs touching the same memory locations — which is exactly what the next section's measurements demonstrate.
+Multithreaded programs need to minimize the number of CPUs touching the same memory — more sharing means more bus traffic and more coherence overhead.

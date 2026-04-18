@@ -7,7 +7,7 @@ draft: false
 tags: []
 ---
 
-This post covers C++ value categories, how they interact with template argument deduction, and how universal references with `std::forward` let you write generic code that moves or copies based on what the caller passed.
+Quick notes on C++ value categories, template argument deduction, and how `std::forward` lets you preserve move/copy semantics across a function call boundary.
 
 ## A Concrete T
 
@@ -27,7 +27,7 @@ struct Widget {
 };
 ```
 
-When `create` calls `T(arg)`, the compiler picks between these two overloads based on the value category of `arg`. Getting that right is the whole point.
+When `create` calls `T(arg)`, overload resolution picks between these two based on the value category of `arg`. That's the whole problem.
 
 ## The Problem: Unnecessary Copies
 
@@ -75,14 +75,14 @@ Unconditionally moving is wrong when the caller passed an lvalue they still need
 
 ## The Real Problem
 
-Inside `create`, `arg` is always an lvalue — it has a name, you can take its address. The information about whether the caller passed an lvalue or rvalue is lost the moment it becomes a named parameter.
+Inside `create`, `arg` is always an lvalue — it has a name, you can take its address. The information about whether the caller passed an lvalue or rvalue is gone the moment it becomes a named parameter.
 
 What you actually need:
 
 - Move if the caller passed a temporary (rvalue)
 - Copy if the caller passed a named variable (lvalue)
 
-And this has to be decided at compile time based on what the caller passed.
+And this has to happen at compile time.
 
 ## The Solution: Universal References + `std::forward`
 
@@ -104,7 +104,7 @@ auto s2 = create<std::string>(std::string("hello"));  // Arg=string&&, moves
 // caller passes rvalue:  Arg deduced as string,   Arg&& stays as string&&
 ```
 
-`std::forward<Arg>(arg)` casts `arg` back to whatever `Arg` was deduced as — lvalue ref or rvalue ref. It's a conditional `std::move`.
+`std::forward<Arg>(arg)` casts `arg` back to whatever `Arg` was deduced as. It's a conditional `std::move` — moves for rvalues, copies for lvalues.
 
 Without it:
 
@@ -116,4 +116,4 @@ return T(std::forward<Arg>(arg));  // correct       -- moves xor copies based on
 
 ## What's Left Unsolved
 
-Because `Arg&&` accepts any type, the template participates in overload resolution even for types `T` can't be constructed from, and even for `T` itself — which can silently hijack copy construction. Constraining an overly greedy template is covered in the next post on SFINAE.
+`Arg&&` accepts any type — including ones `T` can't be constructed from, and including `T` itself, which can silently hijack copy construction. That's a separate problem, covered in the next post on SFINAE.
