@@ -7,7 +7,7 @@ draft: false
 tags: []
 ---
 
-I was recently implementing an `inplace_vector` — a fixed-capacity vector backed by aligned stack storage, no heap allocation — and ran into `std::launder`. It's a standard library additions that looks pointless - it takes a pointer and returns a pointer to the same address. No allocation, no transformation, no runtime effect whatsoever. On its face, it does nothing.
+I was recently implementing an `inplace_vector` — a fixed-capacity vector backed by aligned stack storage, no heap allocation — and ran into `std::launder`. It's a standard library addition that looks pointless - it takes a pointer and returns a pointer to the same address. No allocation, no transformation, no runtime effect whatsoever. On its face, it does nothing.
 
 The reason it exists is a subtle gap in the C++ object model: a pointer to an address is NOT the same thing as a pointer to the object living at that address. Most of the time this distinction doesn't matter. In a narrow set of cases — specifically when you're using placement new to construct objects into raw storage — it matters a lot, and `std::launder` is the only way to close the gap.
 
