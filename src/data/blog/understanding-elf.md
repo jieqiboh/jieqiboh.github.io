@@ -1322,6 +1322,12 @@ The full `xxd` dump of `hello`:
 
 ---
 
+### Wrapping Up ###
+
+This is a basic introduction — we've only scratched the surface of the ELF format. Topics not covered here include relocations (how the linker patches addresses at link time), dynamic linking (the PLT/GOT, `ld.so`, lazy binding), and a deeper look at the symbol table. These will be covered in future posts.
+
+---
+
 ### Resources ###
 
 - [Online ELF Viewer](https://www.sunshine2k.de/coding/javascript/onlineelfviewer/onlineelfviewer.html) — upload any ELF binary and interactively dissect its headers, sections, and segments in the browser.
