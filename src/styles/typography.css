@@ -4,6 +4,7 @@
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
     @apply prose;
+    font-size: 0.9375rem;
 
     h1,
     h2,
@@ -100,6 +101,10 @@
 
     pre {
       @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
+    }
+
+    mark {
+      @apply rounded-sm bg-yellow-200/80 px-0.5 text-foreground dark:bg-yellow-400/25;
     }
   }
 
